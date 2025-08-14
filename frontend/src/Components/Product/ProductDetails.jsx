@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { act, useEffect, useState } from "react";
 const selectProduct = {
   name: "Stylish Jacket",
   price: 1200,
@@ -24,11 +24,18 @@ const ProductDetails = () => {
   const [mainImage, setMainImage] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   useEffect(() => {
     if (selectProduct?.images?.length > 0) {
       setMainImage(selectProduct.images[0].url);
     }
   }, [selectProduct]);
+
+  const handleQuantityChange = (action) => {
+    if (action === "plus") setQuantity((prev) => prev + 1);
+    if(action === "minus" && quantity > 1) setQuantity((prev) => prev -1)
+  }
   return (
     <div className="p-6">
       <div className="max-w-6xl mx-auto bg-white p-8 rounded-lg">
@@ -99,7 +106,7 @@ const ProductDetails = () => {
                     <button
                     key={color}
                     onClick={() => setSelectedColor(color)}
-                    className={`border w-8 h-8 rounded-full ${selectedColor === color ? "border-4 border-black": "border-gray-300"}`}
+                    className={`border w-8 h-8 rounded-full ${selectedColor === color ? "border-4 border-black  ": "border-gray-300"}`}
                     style={{
                       backgroundColor: color.toLocaleLowerCase(),
                       filter: "brightness(0.5)",
@@ -128,11 +135,11 @@ const ProductDetails = () => {
             <div className="mb-6">
               <p className="text-gray-700">Quantity:</p>
               <div className="flex items-center  space-x-4 mt-2">
-                <button className="px-3 py-1 bg-gray-200 rounded text-lg">
+                <button onClick={() => handleQuantityChange("minus")} className="px-3 py-1 bg-gray-200 rounded text-lg">
                   -
                 </button>
-                <span className="text-lg">4</span>
-                <button className="px-3 py-1 bg-gray-200 rounded text-lg">
+                <span   className="text-lg">{quantity}</span>
+                <button onClick={() => handleQuantityChange("plus")} className="px-3 py-1 bg-gray-200 rounded text-lg">
                   +
                 </button>
               </div>
